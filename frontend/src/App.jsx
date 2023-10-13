@@ -1,10 +1,14 @@
-import './App.css';
+import "./App.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Profile from "./components/Profile/Profile";
 
 function App() {
 	return (
-		<>
-			Instagram
-		</>
+		<Router>
+			<Routes>
+				<Route path="/profile/:id" element={<Profile />} />
+			</Routes>
+		</Router>
 	);
 }
 
