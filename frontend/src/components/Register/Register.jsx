@@ -3,8 +3,11 @@ import instagram from "../../assets/images/ins-logo.png";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { saveUserID } from "../../Redux/UserData";
 
 const Register = () => {
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [formData, setFormData] = useState({
 		fullName: "",
@@ -31,6 +34,7 @@ const Register = () => {
 			const url = "http://localhost:8000/api/auth/register";
 			const response = await axios.post(url, formData);
 			console.log(response.data);
+			dispatch(saveUserID(response.data.userID));
 			setFormData({
 				fullName: "",
 				email: "",
