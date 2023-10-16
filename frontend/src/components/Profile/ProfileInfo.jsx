@@ -39,7 +39,7 @@ const ProfileInfo = () => {
 		<>
 			{profile ? (
 				<InfoContainer>
-					<img src="" alt="profile picture" />
+					<img src={`http://localhost:8000/api/profiles/image/${profile.userID}`} alt="profile picture" />
 					<Info>
 						<p className="owner-ID">
 							{profile.userID}
