@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { ErrMessage, FormButton, FormContainer, FormInput, FormLabel } from "./Profile.styles";
 import { axiosInstance } from "../../apiConfig";
+import { useDispatch } from "react-redux";
+import { saveProfileData } from "../../Redux/ProfileData";
 
 const CreateProfile = ({ userID, setIsProfileCreated }) => {
+	const dispatch = useDispatch();
 	const [formData, setFormData] = useState({
 		name: "",
 		category: "",
@@ -37,6 +40,8 @@ const CreateProfile = ({ userID, setIsProfileCreated }) => {
 				formDataToSubmit,
 				{ headers: { "Content-Type": "multipart/form-data" } }
 			);
+			const updatedProfiles = await axiosInstance.get("/api/profiles");
+			dispatch(saveProfileData(updatedProfiles.data));
 			setIsProfileCreated(true);
 			console.log("Profile uploaded successfully:", response.data);
 		} catch (error) {

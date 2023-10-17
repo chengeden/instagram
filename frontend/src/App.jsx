@@ -8,11 +8,13 @@ import Contact from "./components/Contact/Contact";
 import CreatePost from "./components/Post/CreatePost";
 import { useDispatch } from "react-redux";
 import { saveProfileData } from "./Redux/ProfileData";
+import { savePostData } from "./Redux/PostData";
 import { useEffect } from "react";
 import axios from "axios";
 
 function App() {
 	const dispatch = useDispatch();
+
 	useEffect(() => {
 		const getProfiles = async () => {
 			try {
@@ -24,6 +26,19 @@ function App() {
 			}
 		};
 		getProfiles();
+	}, []);
+
+	useEffect(() => {
+		const getPosts = async () => {
+			try {
+				const url = "http://localhost:8000/api/posts";
+				const res = await axios.get(url);
+				dispatch(savePostData(res.data));
+			} catch (error) {
+				console.error("error", error);
+			}
+		};
+		getPosts();
 	}, []);
 
 	return (
