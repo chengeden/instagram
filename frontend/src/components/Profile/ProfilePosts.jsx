@@ -12,10 +12,11 @@ const ProfilePosts = () => {
 	return (
 		<PostGrid>
 			{filteredPosts.length ? (
-				filteredPosts.map((post, index) => {
+				filteredPosts.map((post) => {
 					return (
-						<div key={`${index}-${post.uerID}`}>
-							<img src={post.postLink} alt="post" />
+						<div key={post.postID}>
+							<div className="overlay"></div>
+							<img src={`http://localhost:8000/api/posts/image/${post._id}`} alt="post" />
 						</div>
 					);
 				})

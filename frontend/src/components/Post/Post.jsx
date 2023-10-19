@@ -1,4 +1,4 @@
-import { Caption, Container, Likes, Media, PostActionIcons, PostInfo, UserInfo, UserPost } from "./Post.styles";
+import { Caption, CommentInput, Comments, Container, Likes, Media, PostActionIcons, PostInfo, UserInfo, UserPost } from "./Post.styles";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
@@ -6,12 +6,70 @@ import TelegramIcon from "@mui/icons-material/Telegram";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import SentimentSatisfiedOutlinedIcon from "@mui/icons-material/SentimentSatisfiedOutlined";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { handleLikeSingleClick, handleLikeDoubleClick, postComment } from "../../Redux/PostData";
 import { useState } from "react";
 import { axiosInstance } from "../../apiConfig";
 
 const Post = () => {
+	const dispatch = useDispatch();
 	const allPosts = useSelector((state) => state.post.postData);
+	const userID = useSelector((state) => state.user.userID);
+	const [comment, setComment] = useState({});
+
+	const updatePostData = async (id, updatedObj) => {
+		try {
+			const url = `/api/posts/${id}`;
+			await axiosInstance.put(url, updatedObj);
+		} catch (error) {
+			console.error("Error updating post data:", error);
+		}
+	};
+
+	const handlePostLikes = (type, postData) => {
+		let updatedPost = { ...postData };
+		let likes = "";
+		if (type === "singleClick") {
+			updatedPost.isLiked = !postData.isLiked;
+			likes = String(parseInt(updatedPost.likes, 10) + (updatedPost.isLiked ? 1 : -1));
+			updatedPost.likes = likes;
+			dispatch(handleLikeSingleClick(updatedPost));
+		} else if (type === "doubleClick") {
+			updatedPost.isLiked = true;
+			likes = String(parseInt(updatedPost.likes, 10) + (postData.isLiked ? 0 : 1));
+			updatedPost.likes = likes;
+			dispatch(handleLikeDoubleClick(updatedPost));
+		}
+		let updatedObj = {
+			likes: likes,
+			isLiked: type === "singleClick" ? !postData.isLiked : true,
+			comments: [...postData.comments],
+		};
+		updatePostData(postData._id, updatedObj);
+	};
+
+	const handlePostComment = (postData, text) => {
+		let updatedPost = {
+			...postData,
+			comments: [...postData["comments"], [userID, text]]
+		};
+		dispatch(postComment(updatedPost));
+
+		let updatedObj = {
+			comments: [...postData["comments"], [userID, text]],
+			likes: postData.likes,
+			isLiked: postData.isLiked,
+		};
+		updatePostData(postData._id, updatedObj);
+
+		setComment((prevComments) => ({ ...prevComments, [postData._id]: "" }));
+	};
+
+	const handleCommentLike = (e) => {
+		let color = e.target.style.color;
+		e.target.style.color = color === "tomato" ? "#2f2d2d" : "tomato";
+	};
+
 	return (
 		<Container>
 			{allPosts && allPosts.length > 0 ? (
@@ -31,14 +89,17 @@ const Post = () => {
 								</div>
 								<MoreHorizIcon />
 							</UserInfo>
-							<Media>
+							<Media onDoubleClick={() => handlePostLikes("doubleClick", post)}>
 								<FavoriteIcon className={`like-post-${post.postID}`} />
 								<img src={`http://localhost:8000/api/posts/image/${post._id}`} alt="post" />
 							</Media>
 							<PostInfo>
 								<PostActionIcons>
 									<div className="actions">
-										<FavoriteIcon className={`like-icon ${post.isLiked ? "liked" : ""}`} />
+										<FavoriteIcon
+											className={`like-icon ${post.isLiked ? "liked" : ""}`}
+											onClick={() => handlePostLikes("singleClick", post)}
+										/>
 										<ChatBubbleOutlineOutlinedIcon />
 										<TelegramIcon />
 									</div>
@@ -58,6 +119,46 @@ const Post = () => {
 										<a href="#">...more</a>
 									</span>
 								</Caption>
+								<Comments>
+									{post.comments && post.comments.length !== 0 ? (
+										<>
+											{post.comments.map((comment, i) => {
+												return (
+													<li key={`${i}-${comment[0]}`}>
+														<div>
+															<Link to={`/profile/${comment[0]}`}>
+																<p className="user"> {comment[0]}</p>
+															</Link>
+															<p className="comment">{comment[1]}</p>
+														</div>
+														<div>
+															<FavoriteIcon style={{ fontSize: 12 }} onClick={handleCommentLike} />
+														</div>
+													</li>
+												);
+											})}
+										</>
+									) : (
+										<p className="empty-comment-box">No Comments Yet!</p>
+									)}
+								</Comments>
+								<CommentInput>
+									<SentimentSatisfiedOutlinedIcon />
+									<form>
+										<input
+											className={`comment-input-${post.postID}`}
+											type="text"
+											placeholder="Add a comment..."
+											value={comment[post._id] || ""}
+											onChange={(e) =>
+												setComment((prevComments) => ({
+													...prevComments,
+													[post._id]: e.target.value
+												}))}
+										/>
+									</form>
+									<a href="#" onClick={() => handlePostComment(post, comment[post._id]) || ""}>Post</a>
+								</CommentInput>
 							</PostInfo>
 						</UserPost>
 					);
@@ -65,7 +166,7 @@ const Post = () => {
 			) : (
 				<h1>No Posts Yet!</h1>
 			)}
-		</Container>
+		</Container >
 	);
 };
 
