@@ -17,7 +17,7 @@ const ProfileInfo = () => {
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		const url = `http://localhost:8000/api/profiles/${id}`;
+		const url = `${import.meta.env.VITE_SERVER_URL}/api/profiles/${id}`;
 		axios.get(url)
 			.then((response) => {
 				setProfile(response.data);
@@ -39,7 +39,7 @@ const ProfileInfo = () => {
 		<>
 			{profile ? (
 				<InfoContainer>
-					<img src={`http://localhost:8000/api/profiles/image/${profile.userID}`} alt="profile picture" />
+					<img src={`${import.meta.env.VITE_SERVER_URL}/api/profiles/image/${profile.userID}`} alt="profile picture" />
 					<Info>
 						<p className="owner-ID">
 							{profile.userID}

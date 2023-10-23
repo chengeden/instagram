@@ -16,7 +16,7 @@ const ProfilePosts = () => {
 					return (
 						<div key={post.postID}>
 							<div className="overlay"></div>
-							<img src={`http://localhost:8000/api/posts/image/${post._id}`} alt="post" />
+							<img src={`${import.meta.env.VITE_SERVER_URL}/api/posts/image/${post._id}`} alt="post" />
 						</div>
 					);
 				})

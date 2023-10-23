@@ -31,7 +31,7 @@ const Register = () => {
 			return;
 		}
 		try {
-			const url = "http://localhost:8000/api/auth/register";
+			const url = import.meta.env.VITE_SERVER_URL + "/api/auth/register";
 			const response = await axios.post(url, formData);
 			console.log(response.data);
 			dispatch(saveUserID(response.data.userID));

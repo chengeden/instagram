@@ -79,7 +79,7 @@ const Post = () => {
 							<UserInfo>
 								<div className="post-info">
 									<div className="icon">
-										<img src={`http://localhost:8000/api/profiles/image/${post.userID}`} alt="profile icon" />
+										<img src={`${import.meta.env.VITE_SERVER_URL}/api/profiles/image/${post.userID}`} alt="profile icon" />
 									</div>
 									<div className="id-location">
 										<p className="user owner-id">
@@ -91,7 +91,7 @@ const Post = () => {
 							</UserInfo>
 							<Media onDoubleClick={() => handlePostLikes("doubleClick", post)}>
 								<FavoriteIcon className={`like-post-${post.postID}`} />
-								<img src={`http://localhost:8000/api/posts/image/${post._id}`} alt="post" />
+								<img src={`${import.meta.env.VITE_SERVER_URL}/api/posts/image/${post._id}`} alt="post" />
 							</Media>
 							<PostInfo>
 								<PostActionIcons>

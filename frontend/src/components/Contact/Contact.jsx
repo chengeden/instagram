@@ -4,14 +4,16 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { Container } from "./Contact.styles";
 import { useParams } from 'react-router-dom';
+import Navbar from '../Navbar/Navbar';
 
 const Contact = () => {
 	const { id } = useParams();
 	return (
 		<>
+			<Navbar />
 			<Container>
 				<div className="img">
-					<img src="" alt="profile-pic" />
+					<img src={`${import.meta.env.VITE_SERVER_URL}/api/profiles/image/${id}`} alt="profile-pic" />
 				</div>
 				<div className="email">
 					<h2>{`${id}@gmail.com`}</h2>

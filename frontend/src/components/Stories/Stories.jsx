@@ -42,7 +42,7 @@ const Stories = () => {
 			{profiles.map((profile, i) => (
 				<UserStory key={i}>
 					<Link to={`/profile/${profile.userID}`}>
-						<img src={`http://localhost:8000/api/profiles/image/${profile.userID}`} alt="user story" />
+						<img src={`${import.meta.env.VITE_SERVER_URL}/api/profiles/image/${profile.userID}`} alt="user story" />
 					</Link>
 					<p>{profile.name}</p>
 				</UserStory>

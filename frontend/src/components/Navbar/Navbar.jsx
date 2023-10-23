@@ -19,7 +19,7 @@ const Navbar = () => {
 
 	useEffect(() => {
 		if (currentProfile) {
-			const url = `http://localhost:8000/api/profiles/image/${userID}`;
+			const url = `${import.meta.env.VITE_SERVER_URL}/api/profiles/image/${userID}`;
 			setImgPath(url);
 		}
 	}, [userID, currentProfile]);

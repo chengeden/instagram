@@ -18,7 +18,7 @@ function App() {
 	useEffect(() => {
 		const getProfiles = async () => {
 			try {
-				const url = "http://localhost:8000/api/profiles";
+				const url = import.meta.env.VITE_SERVER_URL + "/api/profiles";
 				const res = await axios.get(url);
 				dispatch(saveProfileData(res.data));
 			} catch (error) {
@@ -31,7 +31,7 @@ function App() {
 	useEffect(() => {
 		const getPosts = async () => {
 			try {
-				const url = "http://localhost:8000/api/posts";
+				const url = import.meta.env.VITE_SERVER_URL + "/api/posts";
 				const res = await axios.get(url);
 				dispatch(savePostData(res.data));
 			} catch (error) {

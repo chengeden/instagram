@@ -29,7 +29,7 @@ const Login = () => {
 			return;
 		}
 		try {
-			const url = "http://localhost:8000/api/auth/login";
+			const url = import.meta.env.VITE_SERVER_URL + "/api/auth/login";
 			const response = await axios.post(url, formData);
 			console.log(response.data);
 			setAuthToken(response.data.token);
