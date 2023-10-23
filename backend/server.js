@@ -4,7 +4,7 @@ const fileUpload = require("express-fileupload");
 const authRoutes = require("./routes/authRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const postRoutes = require("./routes/postRoutes");
-const connectDB = require("./config/db");
+const connectDB = require("./db/db");
 
 const app = express();
 
@@ -18,7 +18,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/profiles", profileRoutes);
 app.use("/api/posts", postRoutes);
 
-const PORT = 8000;
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
-	console.log(`Server is running on http://localhost:${PORT}`);
+	console.log(`Server is listening on port: ${PORT}`);
 });
